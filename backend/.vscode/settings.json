@@ -1,0 +1,7 @@
+{
+  "python.analysis.typeCheckingMode": "basic",
+  "python.languageServer": "Pylance",
+  "python.analysis.diagnosticMode": "workspace",
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.extraPaths": ["./venv/lib/python3.x/site-packages"]
+} 

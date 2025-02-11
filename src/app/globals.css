@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 18, 18, 18;
+  --foreground: 234, 234, 234;
+  --secondary: 179, 179, 179;
+  --accent-blue: 0, 191, 255;
+  --accent-purple: 138, 43, 226;
+  --card: 24, 24, 24;
+}
+
+body {
+  color: rgb(var(--foreground));
+  background: linear-gradient(
+    to bottom right,
+    rgb(var(--background)),
+    rgb(24, 24, 28)
+  );
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+}
+
+.glass-effect {
+  background: rgba(var(--card), 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(var(--foreground), 0.1);
+} 

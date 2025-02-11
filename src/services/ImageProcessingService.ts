@@ -1,6 +1,13 @@
 import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai';
 import { FileData, ProcessingResult, EnhancementOptions, TrackingResult } from '../types';
 
+class ImageProcessingError extends Error {
+  constructor(message: string, public code?: string) {
+    super(message);
+    this.name = 'ImageProcessingError';
+  }
+}
+
 export class ImageProcessingService {
   private model: GenerativeModel;
 
@@ -21,7 +28,10 @@ export class ImageProcessingService {
 
   async processImage(file: FileData): Promise<ProcessingResult> {
     try {
-      // Convert ArrayBuffer to base64
+      if (!file.content) {
+        throw new ImageProcessingError('No image content provided');
+      }
+
       const base64Data = Buffer.from(file.content).toString('base64');
       
       const imageData = {
@@ -41,9 +51,17 @@ export class ImageProcessingService {
         description: response.text()
       };
     } catch (error) {
+      console.error('Image Processing Error:', {
+        name: error.name,
+        message: error.message,
+        code: error.code
+      });
+
       return {
         success: false,
-        error: error.message || "Error processing image"
+        error: error instanceof ImageProcessingError 
+          ? error.message 
+          : 'Failed to process image'
       };
     }
   }

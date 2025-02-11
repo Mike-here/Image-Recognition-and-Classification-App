@@ -1,0 +1,33 @@
+# Environment files
+.env
+.env.local
+.env.*.local
+.env.development
+.env.test
+.env.production
+
+# Firebase config
+firebase-config.json
+**/firebase-config.*
+
+# Dependencies
+node_modules/
+.next/
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+firebase-debug.log*
+
+# Local development
+.DS_Store
+*.pem
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# firebase
+firebase-admin.json

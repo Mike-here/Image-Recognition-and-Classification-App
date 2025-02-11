@@ -1,5 +1,5 @@
 import { GenerativeModel } from '@google/generative-ai';
-import { FileData } from '../types';
+import { FileData, ProcessingResult, EnhancementOptions, TrackingResult } from '../types';
 
 export class ImageProcessingService {
   private model: GenerativeModel;
@@ -20,53 +20,28 @@ export class ImageProcessingService {
   }
 
   async processImage(file: FileData): Promise<ProcessingResult> {
-    // Implementation will be added in Phase 1
+    return {
+      success: false,
+      error: "Not yet implemented"
+    };
   }
 
   async enhanceImage(file: FileData, options: EnhancementOptions): Promise<FileData> {
-    // Implementation will be added in Phase 2
+    return {
+      name: file.name,
+      type: file.type,
+      size: file.size,
+      content: file.content // In Phase 2, we'll implement actual enhancement
+    };
   }
 
   async extractText(file: FileData): Promise<string> {
-    // Implementation will be added in Phase 3
+    return "Not yet implemented";
   }
 
   async trackObjects(videoFile: FileData): Promise<TrackingResult> {
-    // Implementation will be added in Phase 4
+    return {
+      frames: []
+    };
   }
-}
-
-interface ProcessingResult {
-  success: boolean;
-  data?: any;
-  error?: string;
-}
-
-interface EnhancementOptions {
-  crop?: {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-  };
-  filters?: {
-    brightness?: number;
-    contrast?: number;
-    saturation?: number;
-  };
-  resize?: {
-    width: number;
-    height: number;
-  };
-}
-
-interface TrackingResult {
-  frames: Array<{
-    timestamp: number;
-    objects: Array<{
-      id: string;
-      bbox: [number, number, number, number];
-      confidence: number;
-    }>;
-  }>;
 } 

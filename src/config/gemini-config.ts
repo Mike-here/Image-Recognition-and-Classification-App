@@ -1,5 +1,13 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
+// Initialize the Google Generative AI with your API key
+const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || '');
+
+// Get the image generation model
+const model = genAI.getGenerativeModel({ model: "gemini-pro-vision" });
+
+export { model };
+
 export const geminiConfig = {
   apiKey: process.env.GEMINI_API_KEY,
   modelName: 'gemini-pro-vision',

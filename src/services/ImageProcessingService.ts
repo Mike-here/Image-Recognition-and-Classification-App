@@ -1,4 +1,4 @@
-import { GenerativeModel } from '@google/generative-ai';
+import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai';
 import { FileData, ProcessingResult, EnhancementOptions, TrackingResult } from '../types';
 
 export class ImageProcessingService {
@@ -20,28 +20,107 @@ export class ImageProcessingService {
   }
 
   async processImage(file: FileData): Promise<ProcessingResult> {
-    return {
-      success: false,
-      error: "Not yet implemented"
-    };
+    try {
+      // Convert ArrayBuffer to base64
+      const base64Data = Buffer.from(file.content).toString('base64');
+      
+      const imageData = {
+        inlineData: {
+          data: base64Data,
+          mimeType: file.type
+        }
+      };
+
+      const result = await this.model.generateContent([
+        "Please analyze this image and describe its contents in detail.",
+        imageData
+      ]);
+      const response = await result.response;
+      return {
+        success: true,
+        description: response.text()
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message || "Error processing image"
+      };
+    }
   }
 
   async enhanceImage(file: FileData, options: EnhancementOptions): Promise<FileData> {
-    return {
-      name: file.name,
-      type: file.type,
-      size: file.size,
-      content: file.content // In Phase 2, we'll implement actual enhancement
-    };
+    try {
+      // Convert ArrayBuffer to base64
+      const base64Data = Buffer.from(file.content).toString('base64');
+      
+      const imageData = {
+        inlineData: {
+          data: base64Data,
+          mimeType: file.type
+        }
+      };
+
+      const prompt = `Enhance this image with the following options: ${JSON.stringify(options)}`;
+      const result = await this.model.generateContent([prompt, imageData]);
+      const response = await result.response;
+      
+      // Convert response back to ArrayBuffer
+      const buffer = Buffer.from(response.text(), 'base64');
+      
+      return {
+        ...file,
+        name: file.name.replace(/(\.\w+)$/, '_enhanced$1'),
+        content: buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength)
+      };
+    } catch (error) {
+      throw new Error(error.message || "Image enhancement failed");
+    }
   }
 
   async extractText(file: FileData): Promise<string> {
-    return "Not yet implemented";
+    try {
+      const base64Data = Buffer.from(file.content).toString('base64');
+      
+      const imageData = {
+        inlineData: {
+          data: base64Data,
+          mimeType: file.type
+        }
+      };
+
+      const result = await this.model.generateContent([
+        "Extract and return only the text from this image.",
+        imageData
+      ]);
+      const response = await result.response;
+      return response.text();
+    } catch (error) {
+      throw new Error(error.message || "Text extraction failed");
+    }
   }
 
   async trackObjects(videoFile: FileData): Promise<TrackingResult> {
-    return {
-      frames: []
-    };
+    try {
+      const base64Data = Buffer.from(videoFile.content).toString('base64');
+      
+      const videoData = {
+        inlineData: {
+          data: base64Data,
+          mimeType: videoFile.type
+        }
+      };
+
+      const result = await this.model.generateContent([
+        "Track and identify objects in this video. Return the frame-by-frame tracking data.",
+        videoData
+      ]);
+      const response = await result.response;
+      
+      return {
+        frames: JSON.parse(response.text())
+      };
+    } catch (error) {
+      throw new Error(error.message || "Object tracking failed");
+    }
   }
 } 
